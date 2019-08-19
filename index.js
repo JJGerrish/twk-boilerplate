@@ -18,6 +18,11 @@ function writeTemplateToDirectory(templatePath) {
 
         if (stats.isFile()) {
             const contents = fs.readFileSync(origFilePath, 'utf8');
+            
+            // Rename
+            if (file === '.npmignore') {
+                 file = '.gitignore';
+            }
 
             const writePath = `${CURR_DIR}/${file}`;
             fs.writeFileSync(writePath, contents, 'utf8');
