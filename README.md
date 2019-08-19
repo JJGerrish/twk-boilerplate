@@ -15,7 +15,7 @@ cd /Applications/MAMP/htdocs/<project-name>/wp-content/themes/<theme-name>
 # run the boilerplate
 create-twk-boilerplate
 
-# install dependancies
+# install dependencies
 npm install
 
 # run a script to start compiling
@@ -29,4 +29,9 @@ npm run dev
 
 # prod: the same as dev but uglifies the javascript and excludes source maps
 npm run prod
+```
+
+## Update
+```sh
+npm update twk-boilerplate -g
 ```
