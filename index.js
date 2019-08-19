@@ -21,9 +21,13 @@ function writeTemplateToDirectory(templatePath) {
 
         if (stats.isFile()) {
             const contents = fs.readFileSync(origFilePath, 'utf8');
+  
+            // Rename
+            if (file === '.npmignore') file = '.gitignore';
 
             const writePath = `${CURR_DIR}/${file}`;
             fs.writeFileSync(writePath, contents, 'utf8');
+            
         } else if (stats.isDirectory()) {
             fs.mkdirSync(`${CURR_DIR}/${file}`);
 
@@ -37,9 +41,16 @@ function writeTemplateToDirectory(templatePath) {
 
 
 All files have been added, You are ready to go!
-                
-start compiling with: npm run dev
-compile for production (minify) with: npm run prod
+
+
+Please run the following command in this directory to install all of the packages:
+
+npm install            
+
+
+Once finished, you can:
+---- start compiling with: npm run dev
+---- compile for production (minify) with: npm run prod
 
 
             `);
