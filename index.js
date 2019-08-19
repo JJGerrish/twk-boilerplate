@@ -2,9 +2,6 @@
 
 const fs = require('fs');
 
-// - get the current directory that "create-twk-boilerplate" was excecuted in
-// - recursively copy the files from /template into the directory found above
-
 const CURR_DIR = process.cwd();
 
 function writeTemplateToDirectory(templatePath) {
@@ -21,9 +18,6 @@ function writeTemplateToDirectory(templatePath) {
 
         if (stats.isFile()) {
             const contents = fs.readFileSync(origFilePath, 'utf8');
-  
-            // Rename
-            if (file === '.npmignore') file = '.gitignore';
 
             const writePath = `${CURR_DIR}/${file}`;
             fs.writeFileSync(writePath, contents, 'utf8');

@@ -31,6 +31,21 @@ npm run dev
 npm run prod
 ```
 
+## Upload via FTP
+This boilerplate will work locally by default. To automatically upload files via FTP, add the FTP details to the javascript object in twk-boilerplate.config.js. All details must be entered correctly for it to work.
+
+```javascript
+module.exports = {
+    ftpDetails: {
+        host: "HOST",
+        port: 21,
+        user: "USERNAME",
+        pass: "PASSWORD",
+        remotePath: "REMOTE PATH"
+    }
+};
+```
+
 ## Update
 ```sh
 npm update twk-boilerplate -g
