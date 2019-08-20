@@ -44,7 +44,7 @@ Adding template files...
             execSync("npm install",{stdio:[0,1,2]});
             
             // rename gitignore to .gitignore
-            fs.rename(`${templatePath}/gitignore`, `${templatePath}/.gitignore`, function(err) {
+            fs.rename(`${CURR_DIR}/gitignore`, `${CURR_DIR}/.gitignore`, function(err) {
                 if ( err ) console.log('ERROR: ' + err);
                 
                 console.log('gitignore -> .gitignore');
