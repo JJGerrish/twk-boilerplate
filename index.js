@@ -7,7 +7,11 @@ const CURR_DIR = process.cwd();
 
 function writeTemplateToDirectory(templatePath) {
     
-    console.log('Adding files...');
+    console.log(`
+
+Adding template files...
+
+`);
     
     const filesToCreate = fs.readdirSync(templatePath);
 
@@ -33,10 +37,18 @@ function writeTemplateToDirectory(templatePath) {
             writeTemplateToDirectory(`${templatePath}/${file}`);
         }
         
+        // last file has been creates/end of loop
         if (i === filesToCreate.length - 1) {
             
             // run "npm install"
             execSync("npm install",{stdio:[0,1,2]});
+            
+            // rename gitignore to .gitignore
+            fs.rename(`${templatePath}/gitignore`, `${templatePath}/.gitignore`, function(err) {
+                if ( err ) console.log('ERROR: ' + err);
+                
+                console.log('gitignore -> .gitignore');
+            });
             
             console.log(`
 
