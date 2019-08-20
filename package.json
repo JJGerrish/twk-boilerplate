@@ -1,6 +1,6 @@
 {
   "name": "twk-boilerplate",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Front-end boilerplate for projects by The Web Kitchen.",
   "main": "index.js",
   "scripts": {
