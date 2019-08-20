@@ -37,7 +37,7 @@ Adding template files...
             writeTemplateToDirectory(`${templatePath}/${file}`);
         }
         
-        // last file has been creates/end of loop
+        // last file has been created/end of loop
         if (i === filesToCreate.length - 1) {
             
             // run "npm install"

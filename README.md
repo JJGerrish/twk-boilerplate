@@ -43,7 +43,25 @@ module.exports = {
 };
 ```
 
+### Note
+Currently, if you enter FTP details whilst a script is running (i.e. you have excecuted `npm run dev`), files will not be automatically uploaded until you exit the script (`CTRL + C`) and re-run the script again. This will be fixed in a future version.
+
 ## Update
 ```sh
 npm update twk-boilerplate -g
 ```
+
+## .gitignore
+This boilerplate automatically creates a .gitignore file containing the following:
+
+```sh
+node_modules/
+twk-boilerplate.config.js
+```
+### Note
+Any existing .gitignore files in the directory will be replaced
+
+## Bugs/Feature Requests
+Please add any bugs you find along with any new features you want to [the page on Notion](https://www.notion.so/twkdevelopers/Bug-Tracker-82a0b5dbc5784406b34d78358602e733).
+
+ask JJ for access to write if you don't have it.
