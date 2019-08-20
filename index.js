@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 const CURR_DIR = process.cwd();
 
@@ -34,20 +35,15 @@ function writeTemplateToDirectory(templatePath) {
         
         if (i === filesToCreate.length - 1) {
             
+            // run "npm install"
+            execSync("npm install",{stdio:[0,1,2]});
+            
             console.log(`
 
+TWK Boilerplate has successfully been installed, You are ready to go!         
 
-All files have been added, You are ready to go!
-
-
-Please run the following command in this directory to install all of the packages:
-
-npm install            
-
-
-Once finished, you can:
----- start compiling with: npm run dev
----- compile for production (minify) with: npm run prod
+--- start compiling with: npm run dev
+--- compile for production (uglify & minify) with: npm run prod
 
 
             `);

@@ -12,11 +12,8 @@ npm install twk-boilerplate -g
 # navigate to the directory you want to install the boilerplate in, e.g:
 cd /Applications/MAMP/htdocs/<project-name>/wp-content/themes/<theme-name>
 
-# run the boilerplate
+# run the boilerplate command - npm packages will be automatically installed
 create-twk-boilerplate
-
-# install dependencies
-npm install
 
 # run a script to start compiling
 npm run dev
