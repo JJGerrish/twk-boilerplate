@@ -36,7 +36,7 @@ watch("./", { recursive: true, filter: /\.scss$/ }, (evt, name) => {
                 console.log(err);
                 notifier.notify({
                     title: "Failed to process " + name,
-                    message: err.message
+                    message: `${err.message} on line ${err.line}`
                 });
             } else {
                 console.log("screen.scss -> screen.css");
