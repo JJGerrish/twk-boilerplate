@@ -79,7 +79,7 @@ watch("./", { recursive: true, filter: /\.scss$/ }, (evt, name) => {
                                                 let ftp = new jsftp(jsftpDetails); // need to create a new FTP connection for each file hence it being inside the watch function
 
                                                 fs.readFile("./assets/css/screen.css", (err, buffer) => {
-                                                    ftp.put(buffer, ftpDetails.remotePath + "/assets/css/screen.css", putError = {
+                                                    ftp.put(buffer, ftpDetails.remotePath + "/assets/css/screen.css", putError => {
                                                         if (putError) {
                                                             console.error("FTP", putError.toString());
                                                             notifier.notify({
