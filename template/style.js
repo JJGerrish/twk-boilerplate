@@ -53,7 +53,11 @@ watch("./", { recursive: true, filter: /\.scss$/ }, (evt, name) => {
                             postcss([autoprefixer])
                                 .process(buffer, {
                                     from: "assets/css/screen.css",
-                                    to: "assets/css/screen.css"
+                                    to: "assets/css/screen.css",
+                                    map: {
+                                        inline: false,
+                                        prev: result.map.toString() // previous source map
+                                    }
                                 })
                                 .then(result => {
                                     result.warnings().forEach(warn => {
@@ -103,6 +107,37 @@ watch("./", { recursive: true, filter: /\.scss$/ }, (evt, name) => {
                                             }
                                         }
                                     });
+                                
+                                    // Write Source Map to file
+                                    fs.writeFile("./assets/css/screen.css.map", result.map, function(err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log("map written");
+
+                                            if (ftpUpload) {
+                                                let ftp = new jsftp(jsftpDetails); // need to create a new FTP connection for each file hence it being inside the watch function
+                                                
+                                                fs.readFile("./assets/css/screen.css.map", (err, buffer) => {
+                                                    ftp.put(buffer, ftpDetails.remotePath + "/assets/css/screen.css.map", putError => {
+                                                        if (putError) {
+                                                            console.error("FTP", putError.toString());
+                                                            notifier.notify({
+                                                                title: "FTP Error",
+                                                                message:"Cannot connect to the server. Please make sure the FTP Username and Password are correct."
+                                                            });
+                                                        } else {
+                                                            console.log("assets/css/screen.css.map - uploaded successfuly");
+
+                                                            ftp.raw("quit", function(quitErr, data) {
+                                                                if (quitErr) return console.error(quitErr);
+                                                            });
+                                                        }
+                                                    });
+                                                });
+                                            }
+                                        }
+                                    });
 
                                     // Minify CSS and write to .min.css file
 //                                    new CleanCSS({level: 1, sourceMap: true, sourceMapInlineSources: true}).minify(result.css, function (error, output) {
@@ -130,38 +165,12 @@ watch("./", { recursive: true, filter: /\.scss$/ }, (evt, name) => {
 //                                            });
 //                                        }
 //                                    });
-                                });
-                            }
-                        );
-                    }
-                });
-
-                // Write CSS Map to file
-                fs.writeFile("./assets/css/screen.css.map", result.map, function(err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("map written");
-
-                        if (ftpUpload) {
-                            let ftp = new jsftp(jsftpDetails); // need to create a new FTP connection for each file hence it being inside the watch function
-
-                            ftp.put(result.map, ftpDetails.remotePath + "/assets/css/screen.css.map", putError => {
-                                if (putError) {
-                                    console.error("FTP", putError.toString());
-                                    notifier.notify({
-                                        title: "FTP Error",
-                                        message:"Cannot connect to the server. Please make sure the FTP Username and Password are correct."
-                                    });
-                                } else {
-                                    console.log("assets/css/screen.css.map - uploaded successfuly");
-
-                                    ftp.raw("quit", function(quitErr, data) {
-                                        if (quitErr) return console.error(quitErr);
-                                    });
-                                }
-                            });
-                        }
+                                })
+                            // catch postcss promise error
+                            .catch(err => {
+                                console.log(err);
+                            })
+                        });
                     }
                 });
             }
