@@ -84,8 +84,8 @@ if (details.host) {
         const remoteFile = `${details.remotePath}/${fileName}`;
         const remoteDirectoryPath = path.dirname(remoteFile);
 
-        // do nothing if the local file doesn't exist (it's been deleted)
-        if (fs.existsSync(localFile)) {
+        // do nothing if the local file doesn't exist (it's been deleted) or it's a node_modules file
+        if (fs.existsSync(localFile) && !localFile.includes('node_modules')) {
 
             // return if localPath is a directory instead of a file
             if (fs.lstatSync(localFile).isDirectory()) return;

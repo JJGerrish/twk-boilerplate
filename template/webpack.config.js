@@ -3,20 +3,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 const autoprefixer = require('autoprefixer');
-const purgecss = require('@fullhuman/postcss-purgecss')
-const purgecssWordpress = require('purgecss-with-wordpress')
+const purgecss = require('@fullhuman/postcss-purgecss');
+const purgecssWordpress = require('purgecss-with-wordpress');
+const { entryPoints } = require("./twk-boilerplate.config");
 
-//const mode = process = 'dev' ? 'development' : 'production';
 
-const jsPath= './assets/js';
-const scssPath = './assets/sass';
+
 const outputPath = 'assets';
-// const localDomain = 'http://mysite.local';
-const entryPoints = {
-    'bundle': jsPath + '/script.js',
-    'screen': scssPath + '/screen.scss',
-    'editor-style': scssPath + '/editor-style.scss',
-};
 
 module.exports = (env, argv) => {
 
