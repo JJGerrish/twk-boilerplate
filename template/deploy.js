@@ -1,60 +1,96 @@
+const path = require('path');
+const fs = require('fs');
 const watch = require("node-watch"); // watches files for changes
-const jsftp = require("jsftp"); // allows connection to server via FTP
-const fs = require("fs"); // Node's "file system" - jsftp above is essentially a wrapper for this but we need it to read the file
 const notifier = require("node-notifier"); // Used for desktop notifications
-const { ftpDetails } = require("./twk-boilerplate.config");
+const { ftpDetails: details } = require("./twk-boilerplate.config");
+const ftpClient = require("basic-ftp");
+const sftpClient = require("ssh2-sftp-client");
 
-const jsftpDetails = {
-    host: ftpDetails.host,
-    port: ftpDetails.port,
-    user: ftpDetails.user,
-    pass: ftpDetails.pass
-};
 
-const ftpUpload = ftpDetails.host ? true : false;
 
-const ignoreNotifications = [
-    "assets/css/screen.css.map",
-    "assets/js/bundle.min.js.map"
-];
+async function uploadFile(fileName, localFile, remoteFile, remoteDirectoryPath, sftp) {
 
-if (ftpUpload) {
-    watch("./", { recursive: true, filter: /^(?!.*[.](css|scss|css.map)$).*$/ }, (evt, name) => {
-        let ftp = new jsftp(jsftpDetails); // need to create a new FTP connection for each file hence it being inside the watch function
+    const type = sftp ? 'SFTP' : 'FTP';
 
-        let remoteFilePath = ftpDetails.remotePath + "/" + name;
+    try {
 
-        fs.readFile(name, (readError, buffer) => {
-            if (readError) {
-                console.error("readError:", readError);
+        const client = sftp ? new sftpClient() : new ftpClient.Client();
+        
+        if (sftp) {
+
+            const connected = await client.connect({
+                host: details.host,
+                port: details.port,
+                username: details.username,
+                password: details.password
+            });
+            const remoteDirectoryPathExists = await client.exists(remoteDirectoryPath);
+            
+            // recursively make the directories in the file path if they don't exist on the server
+            if (!remoteDirectoryPathExists) {
+                const makeRemoteDirectories = await client.mkdir(remoteDirectoryPath, true);
+            }
+            
+            const fileUpload = await client.put(localFile, remoteFile);
+            
+            console.log(fileName + " - uploaded successfuly via SFTP");
+
+            if (!fileName.includes('.map')) {
                 notifier.notify({
-                    title: "Error",
-                    message: readError
-                });
-            } else {
-                ftp.put(buffer, remoteFilePath, putError => {
-                    if (putError) {
-                        console.error("FTP", putError.toString());
-                        notifier.notify({
-                            title: "FTP Error",
-                            message: "Cannot connect to the server. Please make sure the FTP Username and Password are correct."
-                        });
-                    } else {
-                        console.log(name + " - uploaded successfuly");
-
-                        if (!ignoreNotifications.includes(name)) {
-                            notifier.notify({
-                                title: "Success!",
-                                message: "Successfully uploaded " + name
-                            });
-                        }
-
-                        ftp.raw("quit", function(quitErr, data) {
-                            if (quitErr) return console.error(quitErr);
-                        });
-                    }
+                    title: "Success!",
+                    message: "Successfully uploaded " + fileName
                 });
             }
+            
+            const connectionEnded = await client.end();
+
+        } else {
+            
+            const connected = await client.access({
+                host: details.host,
+                port: details.port,
+                user: details.username,
+                password: details.password,
+                secure: false
+            });
+            const remotePathDirectoriesExist = await client.ensureDir(remoteDirectoryPath);
+            const fileUpload = await client.uploadFrom(localFile, remoteFile);
+
+            console.log(fileName + " - uploaded successfuly via FTP");
+
+            if (!fileName.includes('.map')) {
+                notifier.notify({
+                    title: "Success!",
+                    message: "Successfully uploaded " + fileName
+                });
+            }
+            
+            const connectionEnded = await client.close();
+        }
+
+    } catch (error) {
+        console.log(`${type} Error`, error.message);
+        notifier.notify({
+            title: `${type} Error`,
+            message: error.message
         });
+    }
+}
+
+if (details.host) {
+    watch("./", { recursive: true, filter: /^(?!.*[.](scss|DS_Store)$).*$/ }, (evt, fileName) => {
+
+        const localFile = `${__dirname}/${fileName}`;
+        const remoteFile = `${details.remotePath}/${fileName}`;
+        const remoteDirectoryPath = path.dirname(remoteFile);
+
+        // do nothing if the local file doesn't exist (it's been deleted)
+        if (fs.existsSync(localFile)) {
+
+            // return if localPath is a directory instead of a file
+            if (fs.lstatSync(localFile).isDirectory()) return;
+
+            uploadFile(fileName, localFile, remoteFile, remoteDirectoryPath, details.sftp);
+        }
     });
 }

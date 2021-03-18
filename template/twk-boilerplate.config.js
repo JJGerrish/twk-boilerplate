@@ -1,9 +1,10 @@
 module.exports = {
     ftpDetails: {
+        sftp: false,
         host: "",
         port: 21,
-        user: "",
-        pass: "",
+        username: "",
+        password: "",
         remotePath: ""
     }
 };
