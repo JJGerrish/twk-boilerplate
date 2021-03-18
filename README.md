@@ -21,30 +21,31 @@ npm run dev
 
 ## Scripts
 ```sh
-# dev: watches files for changes, compiles SCSS and JS
+# dev: watches files for changes, compiles SCSS and JS, and uploads all files
 npm run dev
 
-# prod: the same as dev but uglifies the javascript and excludes source maps
+# prod: the same as dev but minifies the css & javascript and excludes source maps
 npm run prod
 ```
 
-## Upload via FTP
-This boilerplate will work locally by default. To automatically upload files via FTP, add the FTP details to the javascript object in twk-boilerplate.config.js. All details must be entered correctly for it to work.
+## Upload via FTP & SFTP
+This boilerplate will work locally by default. To automatically upload files via FTP or SFTP, add the FTP or SFTP details to the javascript object in twk-boilerplate.config.js. All details must be entered correctly for it to work.
 
 ```javascript
 module.exports = {
     ftpDetails: {
+        sftp: false,
         host: "HOST",
         port: 21,
-        user: "USERNAME",
-        pass: "PASSWORD",
+        username: "USERNAME",
+        password: "PASSWORD",
         remotePath: "REMOTE PATH"
     }
 };
 ```
 
 ### Note
-Currently, if you enter FTP details whilst a script is running (i.e. you have excecuted `npm run dev`), files will not be automatically uploaded until you exit the script (`CTRL + C`) and re-run the script again. This will be fixed in a future version.
+FTP/SFTP details should only be changed when no script is running. Changing them whilst a script is running means you will have to exit the script (`CTRL + C`) and restart it.
 
 ## Update
 ```sh
@@ -56,7 +57,6 @@ This boilerplate automatically creates a .gitignore file containing the followin
 
 ```sh
 node_modules/
-twk-boilerplate.config.js
 ```
 ### Note
 Any existing .gitignore files in the directory will be replaced
