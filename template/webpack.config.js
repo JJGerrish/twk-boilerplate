@@ -62,17 +62,14 @@ module.exports = (env, argv) => {
                         {
                             loader: 'postcss-loader',
                             options: {
-                                plugins: [
-                                    autoprefixer(),
-                                    purgecss({
-                                        content: ['./**/*.html', './**/*.php'],
-                                        css: ['**/*.css'],
-                                        safelist: purgecssWordpress.safelist
-                                    })
-                                ],
                                 postcssOptions: {
                                     plugins: [
-                                        ['postcss-preset-env'],
+                                        autoprefixer(),
+                                        // purgecss({
+                                        //     content: ['./**/*.html', './**/*.php'],
+                                        //     css: ['**/*.css'],
+                                        //     safelist: purgecssWordpress.safelist
+                                        // })
                                     ],
                                 },
                             }
