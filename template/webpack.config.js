@@ -26,6 +26,9 @@ module.exports = (env, argv) => {
         mode: mode,
         watch: true,
         devtool: mode === 'development' ? 'source-map' : false,
+        externals: {
+            jquery: "jQuery"
+        },
         entry: entryPoints,
         output: {
             path: path.resolve(__dirname, outputPath),
@@ -79,7 +82,7 @@ module.exports = (env, argv) => {
                 },
                 {
                     test: /\.(jpg|jpeg|png|gif|woff|woff2|eot|ttf|svg)$/i,
-                    use: 'url-loader?limit=1024'
+                    use: 'url-loader'
                 }
             ]
         },
