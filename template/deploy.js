@@ -78,14 +78,14 @@ async function uploadFile(fileName, localFile, remoteFile, remoteDirectoryPath, 
 }
 
 if (details.host) {
-    watch("./", { recursive: true, filter: /^(?!.*[.](scss|DS_Store)$).*$/ }, (evt, fileName) => {
+    watch("./", { recursive: true, filter: /^(?!.*[.](scss|DS_Store|git)$).*$/ }, (evt, fileName) => {
 
         const localFile = `${__dirname}/${fileName}`;
         const remoteFile = `${details.remotePath}/${fileName}`;
         const remoteDirectoryPath = path.dirname(remoteFile);
 
-        // do nothing if the local file doesn't exist (it's been deleted) or it's a node_modules file
-        if (fs.existsSync(localFile) && !localFile.includes('node_modules')) {
+        // do nothing if the local file doesn't exist (it's been deleted) or it's a node_modules file or it's a .git file
+        if (fs.existsSync(localFile) && !localFile.includes('node_modules') && !localFile.includes('.git')) {
 
             // return if localPath is a directory instead of a file
             if (fs.lstatSync(localFile).isDirectory()) return;
