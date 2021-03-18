@@ -49,6 +49,13 @@ Adding template files...
                 
                 console.log('gitignore -> .gitignore');
             });
+
+            // rename npmrc to .npmrc
+            fs.rename(`${CURR_DIR}/npmrc`, `${CURR_DIR}/.npmrc`, function(err) {
+                if ( err ) console.log('ERROR: ' + err);
+                
+                console.log('npmrc -> .npmrc');
+            });
             
             console.log(`
 
