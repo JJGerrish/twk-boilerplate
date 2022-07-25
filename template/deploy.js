@@ -78,7 +78,7 @@ async function uploadFile(fileName, localFile, remoteFile, remoteDirectoryPath, 
 }
 
 if (details.host) {
-    watch("./", { recursive: true, filter: /^(?!.*[.](scss|DS_Store|git)$).*$/ }, (evt, fileName) => {
+    watch("./", { recursive: true, filter: /^(?!.*[.](scss|DS_Store|git|config.js)$).*$/ }, (evt, fileName) => {
 
         const localFile = `${__dirname}/${fileName}`;
         const remoteFile = `${details.remotePath}/${fileName}`;

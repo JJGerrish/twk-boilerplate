@@ -75,7 +75,12 @@ module.exports = (env, argv) => {
                                 },
                             }
                         },
-                        'sass-loader'
+                        {
+                            loader: 'sass-loader',
+                            options: {
+                                sourceMap: mode === 'development',
+                            }
+                        }
                     ]
                 },
                 {
